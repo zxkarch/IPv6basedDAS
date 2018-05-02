@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="xg_DriveTest_Server"
+  id="myeclipse.1436507789807"
+  context-root="/xg_DriveTest_Server"
+  j2ee-spec="6.0"
+  archive="xg_DriveTest_Server.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

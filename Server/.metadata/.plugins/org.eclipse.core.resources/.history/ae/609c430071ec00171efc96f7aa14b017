@@ -1,0 +1,124 @@
+package com.iton.Model;
+
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import Decoder.BASE64Decoder;
+import Decoder.BASE64Encoder;
+
+public class Photo {
+
+	private String img_base64;
+	private byte[] img_bytes;
+
+	private static String FILEPATH = "/home/j2kgo/xg_Drive/SERVER/Info/img";
+
+	public static final int TYPE_BASE64 = 1;
+	public static final int TYPE_FILENAME = 2;
+
+    public Photo(int type, String argv){
+    	switch(type){
+    	    case TYPE_BASE64:
+    	    	this.img_base64 = argv;
+    	    	this.img_bytes = null;
+    	    	break;
+    	    case TYPE_FILENAME:
+                file2Bytes(argv);
+                bytes2Base64();
+    	    	break;
+    	}
+    }
+
+    public void base642Bytes(){
+        BASE64Decoder decoder = new BASE64Decoder();
+        try{
+            img_bytes = decoder.decodeBuffer(img_base64);
+            for(int i = 0; i< img_bytes.length; ++i){
+            	if (img_bytes[i] < 0){
+            		img_bytes[i] += 256;
+            	}
+            }
+        } catch(Exception e){
+        	e.printStackTrace();
+        }
+	}
+
+    private void bytes2Base64(){
+        BASE64Encoder encoder = new BASE64Encoder();
+        img_base64 = encoder.encode(img_bytes);
+    }
+
+    public void file2Bytes(String fileName){
+        try{
+        	File file = new File(FILEPATH + File.separator + fileName);
+            FileInputStream fis = new FileInputStream(file);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] b = new byte[1024];
+            int n;
+            while ((n = fis.read(b)) != -1){
+            	bos.write(b, 0, n);
+            }
+            fis.close();
+            bos.close();
+            img_bytes = bos.toByteArray();
+        } catch(Exception e){
+        	try{
+        	    File file = new File(FILEPATH + File.separator + "img.png");
+                FileInputStream fis = new FileInputStream(file);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                byte[] b = new byte[1024];
+                int n;
+                while ((n = fis.read(b)) != -1){
+            	    bos.write(b, 0, n);
+                }
+                fis.close();
+                bos.close();
+                img_bytes = bos.toByteArray();
+        	} catch (Exception e1){
+        		e1.printStackTrace();
+        	}
+        }
+    }
+
+    public void byte2File(String fileName){
+    	BufferedOutputStream bos = null;
+    	FileOutputStream fos = null;
+    	File file = null;
+    	try{
+    		File dir = new File(FILEPATH);
+    		if (!dir.exists() && dir.isDirectory()){
+    			dir.mkdirs();
+    		}
+    		file = new File(FILEPATH + File.separator + fileName);
+    		fos = new FileOutputStream(file);
+    		bos = new BufferedOutputStream(fos);
+    		fos.write(img_bytes);
+    	} catch(Exception e){
+    		e.printStackTrace();
+    	} finally {
+    		if (bos != null){
+    			try{
+    				bos.close();
+    			} catch(IOException e){
+    				e.printStackTrace();
+    			}
+    		}
+    		if (fos != null){
+    			try{
+    				fos.close();
+    			} catch(IOException e){
+    				e.printStackTrace();
+    			}
+    		}
+    	}
+    }
+
+    public String get_Img_base64(){
+    	return img_base64;
+    }
+
+}

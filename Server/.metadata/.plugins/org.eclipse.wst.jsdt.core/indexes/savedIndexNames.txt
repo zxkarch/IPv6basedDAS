@@ -1,0 +1,6 @@
+INDEX VERSION 1.4+C:\Users\Administrator\Documents\cernet\Server\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+1770946361.index
+1677461669.index
+1413914454.index
+4155102197.index
+2845081775.index
